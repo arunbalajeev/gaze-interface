@@ -1,0 +1,137 @@
+body {
+    background: white;
+}
+.debug {
+    position:absolute;
+    font-size: 16px;
+    top:710px;
+    left: 20px;
+}
+.header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+.right {
+    position: absolute;
+    top: 80px;
+    left: 900px;
+}
+.help {
+    position:absolute;
+    top: 65px;
+    left: 50px;
+}
+.span-title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight:bold;
+}
+#status {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+
+}
+.navbar-custom {
+    border-width: 0 0 1px;
+    position: fixed;
+    background: #FAFAFA;
+    top: 0;
+    right: 100px;
+    z-index: 1030;
+}
+
+    .navbar-custom .navbar-form {
+        padding-right: 0;
+    }
+.navbar-custom .navbar-collapse {
+        float:left;
+    }
+
+.navbar-custom {
+    border-radius: 0;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#c {
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    width: 805px;
+    height: 560px;
+}
+.tp-video-play-button {
+    display: none !important
+}
+
+.btn-head {
+    background-color: lightskyblue;
+}
+.tracks {
+    max-height: 600px;
+    width:450px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+video {
+    position:absolute;
+    top: 100px;
+    left: 50px;
+    border: 1px solid black;
+    padding: 0; margin: 0;
+    background-color: black;
+    margin: auto;
+    float: left;
+    width: 800px;
+    height: 600px;
+}
+#quali_text {
+    font-size:16px;
+}
+.link {
+     background-color: lemonchiffon;
+}
+.active_link {
+     background-color: palegreen;
+}
+.video {
+    margin: auto;
+    width: 60%;
+    border: 3px solid #73AD21;
+    padding: 10px;
+}
+.header-fixed {
+    width: 100%
+}
+
+.header-fixed > thead,
+.header-fixed > tbody,
+.header-fixed > thead > tr,
+.header-fixed > tbody > tr,
+.header-fixed > thead > tr > th,
+.header-fixed > tbody > tr > td {
+    display: block;
+}
+
+.header-fixed > tbody > tr:after,
+.header-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.header-fixed > tbody {
+    overflow-y: auto;
+}
+
+.header-fixed > tbody > tr > td,
+.header-fixed > thead > tr > th {
+    width: 20%;
+    float: left;
+}

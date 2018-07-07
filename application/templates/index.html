@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-collapse collapse">
+	<ul class="nav navbar-nav navbar-left">
+	{% if session['assignment_id']!="ASSIGNMENT_ID_NOT_AVAILABL":%}
+            <!--<img alt="LOGO" src="...">-->
+	<script>var isFirefox = typeof InstallTrigger !== 'undefined';
+	if(isFirefox==true){
+            document.write("<form action='https://people.ee.ethz.ch/~arunv/gaze-interface/static/gaze/'><input type='submit' class='btn btn-success btn-default navbar-btn btn-head' id='intro' value='Accept Terms & Conditions' /></form>")}
+	else{
+	    document.write("<p style='font-size:20px'>Please use <font color='blue'>Firefox</font> browser<br/> to proceed to the task!</p>");}
+	</script>
+	{% else %}
+		<br/>Please <b>Accept HIT</b> before annotating!
+	{% endif%}
+        
+            </ul>
+	
+        <center><h3><b>Gaze Recording Task</b></h3></center>
+
+    </div>
+    </nav>
+    <center><div class="Instructions" style="width:700px"><h3 align = "center">Instructions </h3>
+				<ul>
+				<li> The <b>Terms and Conditions </b> </li>
+					<ul>
+					<li> <u>Use the laptop with functional camera, otherwise the annotation is disqualified.</u></li>
+					<li> <u>The video is recorded from frontal camera of the laptop/computer during the annotation.</u></li>
+					<li> <u>The recorded video is used for research purpose only.</u></li> 
+					</ul>
+				<li> The <b>Tasks</b> </li>
+					<ul>
+					<li> Minimize the window such that whole image is seen in the browser.</li>
+					<li> Click the four corners of the shown image where it is highlighted by white colored box.</li>
+					<li> Colored boxes which bound the objects in the image are to be gazed one after the other. Click inside the colored box and see the clicked object in the shown video till the end. </li> 
+					<li> Click the colored box one by one and gaze at the object. If the colored box is not visible, click Next button.</li> 
+					<li> After clicking and gazing at all the objects, click Save Video button and then Submit HIT button.</li> 
+					</ul>
+				<li> The <b>DO's</b></li>
+					<ul>
+					<li> Please sit under good lighting conditions.</li>
+					<li> Check the image quality from the camera by clicking <u>View Selfie</u> button</li>
+					<li> Gaze at the clicked object and follow the object till the end of the video.</li>
+					</ul>
+				
+				<li>After completion the HIT will be completed.</li>
+				<li>If you have problems or suggestions regarding the interface: Please get in touch</li>
+				</ul>
+    </div></center>
+    <hr>
+    <div>
+    <div class="col-md-12">
+	<center><h4><b>Sample Recording</b></h4>
+		<img src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/face.jpg"/><br/>
+	</ul>
+	</center>
+    </div>
+    
+   
+    </div>
+
+{% endblock %}

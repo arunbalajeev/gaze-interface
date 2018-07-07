@@ -1,0 +1,141 @@
+.slider {
+  max-width: 500px;
+  background-color: white;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.slider div {
+  background-color: white;
+  width: 100%;
+  display: inline-block;
+  display: none;
+}
+
+.slider img {
+  width: 100%;
+  height: auto;
+}
+.slider_vis {
+  max-width: 500px;
+  background-color: white;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.slider_vis div {
+  background-color: white;
+  width: 100%;
+  display: inline-block;
+  display: none;
+}
+
+.slider_vis img {
+  width: 100%;
+  height: auto;
+}
+
+.next {
+  right: 35px;
+}
+
+.prev {
+  left: 35px;
+}
+#overwrite { 
+   position: relative;
+   width:0px;
+   bottom: 0px; 
+   right: 0px; 
+   font: bold 24px/45px Helvetica, Sans-Serif; 
+   letter-spacing: 0px;  
+   padding: 0px;
+   color: red;
+}
+#overwrite_vis { 
+   position: relative;
+   width:0px;
+   bottom: 0px; 
+   right: 0px; 
+   font: bold 12px/20px Helvetica, Sans-Serif; 
+   letter-spacing: 0px;  
+   padding: 0px;
+   color: red;
+}
+.boxed{
+border: 1px solid black ;
+}
+
+.Instructions{
+border: 1px solid black ;
+}
+
+.Instructions {
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
+.Instructions ul {
+  text-align: left;
+}
+
+.Categories {
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
+.Categories ul {
+  text-align: left;
+}
+
+.enlarge img {
+  height: 200px;
+  width: 200px;
+ 
+  -webkit-transition: all 0.1s ease;
+     -moz-transition: all 0.1s ease;
+       -o-transition: all 0.1s ease;
+      -ms-transition: all 0.1s ease;
+          transition: all 0.1s ease;
+}
+
+.enlarge img:hover {
+  transform:scale(1,1);
+  transform-origin:0 0;
+}
+
+.enlarge_vis img {
+  height: 100px;
+  width: 100px;
+ 
+  -webkit-transition: all 0.1s ease;
+     -moz-transition: all 0.1s ease;
+       -o-transition: all 0.1s ease;
+      -ms-transition: all 0.1s ease;
+          transition: all 0.1s ease;
+}
+
+.enlarge_vis img:hover {
+  transform:scale(1,1);
+  transform-origin:0 0;
+}
+
+.cluster img {
+  width: 80px;
+  height: 80px;
+  overflow:visible;
+}
+
+.cluster img:hover {
+  transform:scale(2,2);
+  transform-origin:top left;
+  transition-duration: 0.1s;
+  overflow:visible;
+}
+
+.create_cluster li.cluster:hover{
+  width: 200px;
+  height: 200px;
+}

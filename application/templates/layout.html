@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Gaze Recording Task</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }}>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/style.css" type="text/css" rel="stylesheet"/>
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap-theme.min.css" rel="stylesheet"> 
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/slide.css" rel="stylesheet" type="text/css">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/select_drag.css" rel="stylesheet" type="text/css">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/carousel.css" rel="stylesheet" type="text/css">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap-select.css" rel="stylesheet">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap-combobox.css" rel="stylesheet">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap-select.min.css" rel="stylesheet">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap.css" rel="stylesheet">
+<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/jcrop_css/jquery.Jcrop.css" rel="stylesheet">
+<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/jcrop_css/jquery.Jcrop.min.css" rel="stylesheet">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/bootstrap.min.css">
+	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/drag_drop.css" rel="stylesheet" type="text/css">
+  	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/video-js.min.css" rel="stylesheet">
+  	<link href="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/css/videojs.record.min.css" rel="stylesheet">
+  	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/js/video.min.js"></script>
+  	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/js/RecordRTC.js"></script>
+  	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/js/videojs.record.min.js"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/slide.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/drag_drop.js" type="text/javascript"></script>
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/carousel.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/submit_validation.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/dataStore.js" type="text/javascript"></script>
+	<!--<script src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/dropdown.js" type="text/javascript"></script> -->
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/bootstrap-select.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/bootstrap-combobox.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/bootstrap-select.min.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/jcrop_js/jquery.Jcrop.min.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/jcrop_js/jquery.Jcrop.js" type="text/javascript"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/jcrop_js/jquery.color.js" type="text/javascript"></script>
+	<!--<script src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/bootstrap.min.js" type="text/javascript"></script> -->
+
+	<style>
+	html { overflow-x: hidden;overflow-y:hidden }
+	</style>
+<script>
+
+var audio_blob = new FormData();
+var video_blob = new FormData();
+var selfie_blob = new FormData();
+var xbox=[];var ybox=[];var wbox=[];var hbox=[];var colbox=[];var textbox=[];
+var box_X = new Array();
+var box_Y = new Array();
+var box_W = new Array();
+var box_H = new Array();
+var box_color = new Array();
+var box_desc = [];
+var box_attr_obj=[];var box_attr_color=[];var box_attr_numinst=[]; var box_attr_action=[];var box_attr_futact=[];var box_attr_shape=[];box_attr_attend=[];
+var box_us_dist=[];var box_us_sdist=[];var box_us_road=[];var box_us_direc=[];var box_us_rot=[];var box_us_pos=[]; var box_us_speed=[]; 
+
+var recorder_no,active=0;
+var approval0=0,approval1=0,approval2=0,approval3=0,approval4=0;mic_activated=0;volume_level=0.5,click_record=0;
+var box_desc = [];
+var endpoint = "https://people.ee.ethz.ch/~arunv/gaze_recorder_1/static/"
+var rowno=1;
+var currentrow=0;
+var contxt=""
+var bboxvalues=[]
+var bboxcolors=[]
+var currentbboxvalue=[]
+var current_position="";
+var current_count=1;
+var current_relspat0=[];var current_relspat1=[];var current_relspat2=[];var current_relspat3=[];var current_relspat4=[];var current_relspat5=[];
+colornow=""
+var check_play_video=0;
+var check_submit=0;
+var co=0;
+var desc_position=0;
+var out_data={}
+var str_arr = [],str_arr_dummy=[],iter_no=-1;calibration=0;var selfie=[];var selfie_dummy=[];
+var selfie_leftbottom=[];var selfie_lefttop=[];var selfie_rightbottom=[];var selfie_righttop=[];
+var gazed_videos=[]
+
+function takeScreenShot(){
+	var html2obj=html2canvas($('body'),allowTaint=false,taintTest=false);
+	var queue = html2obj.parse();
+	var canvas = html2obj.render(queue);
+	var img = canvas.toDataURL();
+	window.open(img);
+}
+
+function plotcanvas(col){
+	
+	var canvas = document.getElementById('myCanvas');
+  	var ctx = canvas.getContext('2d');
+	var img=document.getElementById("prev_crop");  
+	ctx.drawImage(img,0,0,1920,960);
+	if(calibration<4){
+	ctx.beginPath();ctx.rect(0, 0, 40, 40);ctx.fillStyle = 'white';ctx.fill();ctx.lineWidth = 5;
+	ctx.beginPath();ctx.rect(1880, 0, 1920, 40);ctx.fillStyle = 'white';ctx.fill();ctx.lineWidth = 5;
+	ctx.beginPath();ctx.rect(0, 920, 40, 960);ctx.fillStyle = 'white';ctx.fill();ctx.lineWidth = 5;
+	ctx.beginPath();ctx.rect(1880, 920, 1920, 960);ctx.fillStyle = 'white';ctx.fill();ctx.lineWidth = 5;
+  	}//ctx.drawImage(contxt,0,0,800,500)
+	for (iter in bboxvalues){
+		if (bboxvalues.hasOwnProperty(iter)) {
+			if(bboxvalues[iter]["key"] == currentrow&&col!=undefined){putcolor=col;}
+			else {putcolor=bboxcolors[iter]["value"];}
+			var temp = bboxvalues[iter]["value"]
+			ctx.beginPath();
+    			ctx.rect(temp[0],temp[1],temp[2],temp[3]);
+			ctx.fillStyle = 'transparent';
+  			ctx.fill();
+  			ctx.lineWidth = 5;
+  			ctx.strokeStyle = bboxcolors[iter]["value"];;
+  			ctx.stroke();	
+		}
+    	}
+	$('#prev-anno').click();
+}
+$(function() {
+  var canvas = document.getElementById('myCanvas');
+  var ctx = canvas.getContext('2d');
+  var video = document.getElementById('myVideo');
+  video.addEventListener('play', function() {
+    var $this = this; //cache
+    //plotcanvas();
+    (function loop() {
+      if (!$this.paused && !$this.ended) {
+        ctx.drawImage($this, 0, 0, 1920,960);
+        setTimeout(loop, 1000 / 24); // drawing at 24fps
+      }
+      else{ plotcanvas();}
+    })();
+  }, 0);
+  
+});
+
+$(document).ready(function() {
+  $('#play-video').on('click', function(ev) {
+    check_play_video =1;
+    var video = document.getElementById("myVideo");
+    video.play();
+    ev.preventDefault();
+ 
+  });
+  $('#prev-anno').on('click', function(ev) {
+    var copycanvas = document.getElementById("prevCanvas");
+    var copyctx = copycanvas.getContext('2d');
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(copyctx.canvas,0,0);
+    ev.preventDefault();
+ 
+  });
+  $('#rem-anno').on('click', function(ev) {
+    var copycanvas = document.getElementById("prevCanvas");
+    var copyctx = copycanvas.getContext('2d');
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var img=document.getElementById("prev_crop");  
+	ctx.drawImage(img,0,0,1920,960);
+	ctx.beginPath();
+	//ctx.drawImage(contxt,0,0,800,500)
+	for (iter in bboxvalues){
+		if (bboxvalues.hasOwnProperty(iter)) {
+			var temp = bboxvalues[iter]["value"]
+			ctx.beginPath();
+			ctx.rect(temp[0],temp[1],temp[2],temp[3]);
+			ctx.fillStyle = 'transparent';
+			ctx.fill();
+			ctx.lineWidth = 5;
+			ctx.strokeStyle = bboxcolors[iter]["value"];
+			ctx.stroke();	
+		}
+	}
+	
+    ev.preventDefault();
+ 
+  });
+  $('#next-audio').on('click', function(ev) {
+    document.getElementById("descriptions_"+desc_position.toString()).classList.add('hidden');
+    desc_position=desc_position+1;
+    if(desc_position==10){
+    document.getElementById("descriptions_"+desc_position.toString()).classList.remove('hidden');
+    //desc_position=0;
+    }
+    else if(desc_position==11){
+	document.getElementById("descriptions_0").classList.remove('hidden');
+    	desc_position=0;
+    }
+    else{
+    document.getElementById("descriptions_"+desc_position.toString()).classList.remove('hidden');
+    }
+  });
+  $('#record_0').on('hover', function(ev) {
+     $recording = $('#recording_0');
+     $timeDisplay = $('#time-display_0');
+     $record = $('#record_0');
+     $cancel = $('#cancel_0');
+     console.log("hello")
+  });
+  $('#objdesc').bind("cut copy paste",function(e) {
+          e.preventDefault();
+      });
+});
+function checkplayvideo()
+{	//console.log('entered')
+	if (check_play_video==1){
+	}
+	else{alert('Click Play Video button to watch the video');}
+};
+function showC(c)
+{
+	if (check_play_video==1){
+	$('#x').val(c.x);
+	$('#y').val(c.y);
+	$('#x2').val(c.x2);
+	$('#y2').val(c.y2);
+	$('#w').val(c.w);
+	$('#h').val(c.h);}
+	//else{alert('Play Video');}
+};
+
+function clickedbox(c){
+	//console.log(c.x);
+	//console.log(xbox[iter_no])
+	if (calibration==4){
+	   if(c.x>xbox[iter_no] && c.x<(xbox[iter_no]+wbox[iter_no]) && c.y>ybox[iter_no] && c.y<(ybox[iter_no]+hbox[iter_no])){
+		$('#start_vid_record').click();
+		var canvas = document.getElementById('myCanvas');
+		var context = canvas.getContext('2d');
+		var video = document.getElementById('myVideo');
+		video.src="https://data.vision.ee.ethz.ch/arunv/obj_desc_annotator/cityscape/{{session['video_folder']}}/{{session['video_tag']}}_forward.mp4"
+		video.addEventListener('canplay', function() {
+		    var $this = this; //cache
+		    //plotcanvas();
+		    (function loop() {
+		      if (!$this.paused && !$this.ended) {
+			context.drawImage($this, 0, 0, 1920,960);
+			setTimeout(loop, 1000 / 24); // drawing at 24fps
+		      }
+		      else{ /*plotcanvas();*/$('#stop_vid_record').click();/*iterate_box();*/}
+		 })();
+		}, 0);
+	   }
+	}
+	else{
+	   if(c.x>=0 && c.x<=40 && c.y>=0 && c.y<=40){
+		var frame = captureVideoFrame('cam_video', 'png');
+		if(selfie_lefttop.length==0){calibration+=1;}
+		selfie_lefttop=frame.dataUri;
+		var canvas = document.getElementById('myCanvas');
+    		var ctx = canvas.getContext('2d');
+		ctx.beginPath();ctx.rect(0, 0, 40, 40);ctx.fillStyle = 'red';ctx.fill();ctx.lineWidth = 5;
+		console.log("saving to lefttop selfie blob file")
+		
+	   }
+	   if(c.x>=1880 && c.x<=1920 && c.y>=0 && c.y<=40){
+		var frame = captureVideoFrame('cam_video', 'png');		
+		if(selfie_righttop.length==0){calibration+=1;}
+		selfie_righttop=frame.dataUri;
+		var canvas = document.getElementById('myCanvas');
+    		var ctx = canvas.getContext('2d');
+		ctx.beginPath();ctx.rect(1880, 0, 1920, 40);ctx.fillStyle = 'red';ctx.fill();ctx.lineWidth = 5;
+		console.log("saving to righttop selfie blob file")
+	   }
+	   if(c.x>=0 && c.x<=40 && c.y>=920 && c.y<=960){
+		var frame = captureVideoFrame('cam_video', 'png');		
+		if(selfie_leftbottom.length==0){calibration+=1;}
+		selfie_leftbottom=frame.dataUri;
+		var canvas = document.getElementById('myCanvas');
+    		var ctx = canvas.getContext('2d');
+		ctx.beginPath();ctx.rect(0,920, 40, 960);ctx.fillStyle = 'red';ctx.fill();ctx.lineWidth = 5;
+		console.log("saving to leftbottom selfie blob file")
+	   }
+	   if(c.x>=1880 && c.x<=1920 && c.y>=920 && c.y<=960){
+		var frame = captureVideoFrame('cam_video', 'png');		
+		if(selfie_rightbottom.length==0){calibration+=1;}
+		selfie_rightbottom=frame.dataUri;
+		var canvas = document.getElementById('myCanvas');
+    		var ctx = canvas.getContext('2d');
+		ctx.beginPath();ctx.rect(1880, 920, 1920, 960);ctx.fillStyle = 'red';ctx.fill();ctx.lineWidth = 5;
+		console.log("saving to rightbottom selfie blob file")
+	   }
+	   if(calibration==4){
+		iterate_box();$('#view_categories').modal('show');
+	   }
+	}
+}
+
+
+function addrow() {
+	if (check_play_video==1){
+	contxt="hai"
+	$('#fdisabled').prop("disabled", false);
+	var table = document.getElementById("track");
+	var row = document.getElementById("trow0"); // find row to copy
+      	var clone = row.cloneNode(true); // copy children too
+      	clone.id = "trow".concat(rowno.toString()); // change id or other attributes/contents
+	clone.style.visibility = "hidden";
+	clone.height = "100%";
+	for (var j = 0, col; col = clone.cells[j]; j++) {
+		switch(j){
+			case 0:
+				col.textContent = "Box".concat(rowno.toString());break;
+			case 1:
+				col.innerHTML = "<button type='button' class='btn btn-primary btn-sm' style='width:80%;background-color:"+colornow+"'>"+colornow+"</button>";break;
+			case 2:
+				col.textContent = "";break;
+			case 3:
+				col.innerHTML = "<input type='radio' name='select' onmousedown='refresh();' onchange='if(this.checked){currentrow=this.value;doDesc();}' value="+rowno+" checked>";currentrow=rowno;break;
+			case 4:
+				col.innerHTML = "<input type='button' id='delid_"+currentrow.toString()+"' class='btn btn-danger btn-sm' onclick='deleterow(this.id);' value='Remove'>";break;
+		}
+		//console.log(col)	
+	}
+	bboxvalues.push({key:currentrow, value:currentbboxvalue});
+	bboxcolors.push({key:currentrow, value:colornow});
+	box_X.push({key:currentrow, value:currentbboxvalue[0]});box_Y.push({key:currentrow, value:currentbboxvalue[1]});box_W.push({key:currentrow, value:currentbboxvalue[2]});box_H.push({key:currentrow, value:currentbboxvalue[3]});box_color.push({key:currentrow, value:colornow});
+	rowno=rowno+1;
+      	//table.appendChild(clone);
+	current_relspat0[currentrow]=0;current_relspat1[currentrow]=0;current_relspat2[currentrow]=0;current_relspat3[currentrow]=0;current_relspat4[currentrow]=0;current_relspat5[currentrow]=0;
+	//console.log(current_relspat0)
+	$('#refresh').load(document.URL +  ' #refresh');
+	$('#refresh2').load(document.URL +  ' #refresh2');}
+	$('#resetbut').click();
+	//else{alert('Play Video');}
+};
+$(function(){
+	$("#myCanvas").Jcrop({
+		//onclick: clickedbox,
+		onChange: clickedbox,//showC,
+		onSelect: clickedbox
+		//onRelease: addrow
+	});
+});
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function deleterow(del_id) {
+	var delrow= parseInt(del_id.split("_")[1]);
+	for (iter in current_relspat0){
+		current_relspat0.splice(iter,1);current_relspat1.splice(iter,1);current_relspat2.splice(iter,1);current_relspat3.splice(iter,1);current_relspat4.splice(iter,1);current_relspat5.splice(iter,1);
+	}
+	for (iter in bboxvalues){
+		if(bboxvalues[iter]["key"] == delrow){bboxvalues.splice(iter,1);}
+		if(bboxcolors[iter]["key"] == delrow){bboxcolors.splice(iter,1);}
+		if(box_X[iter]["key"] == delrow){box_X.splice(iter,1);}
+		if(box_Y[iter]["key"] == delrow){box_Y.splice(iter,1);}
+		if(box_W[iter]["key"] == delrow){box_W.splice(iter,1);}
+		if(box_H[iter]["key"] == delrow){box_H.splice(iter,1);}
+		if(box_color[iter]["key"] == delrow){box_color.splice(iter,1);}
+    	}
+	for (iter in box_desc){
+		if(box_desc.hasOwnProperty(iter)){if(box_desc[iter]["key"] == delrow){box_desc.splice(iter,1);}}
+		if(box_attr_obj.hasOwnProperty(iter)){if(box_attr_obj[iter]["key"] == delrow){box_attr_obj.splice(iter,1);}}
+		if(box_attr_color.hasOwnProperty(iter)){if(box_attr_color[iter]["key"] == delrow){box_attr_color.splice(iter,1);}}
+		if(box_attr_numinst.hasOwnProperty(iter)){if(box_attr_numinst[iter]["key"] == delrow){box_attr_numinst.splice(iter,1);}}
+		if(box_attr_action.hasOwnProperty(iter)){if(box_attr_action[iter]["key"] == delrow){box_attr_action.splice(iter,1);}}
+		if(box_attr_futact.hasOwnProperty(iter)){if(box_attr_futact[iter]["key"] == delrow){box_attr_futact.splice(iter,1);}}
+		if(box_attr_shape.hasOwnProperty(iter)){if(box_attr_shape[iter]["key"] == delrow){box_attr_shape.splice(iter,1);}}
+		if(box_attr_attend.hasOwnProperty(iter)){if(box_attr_attend[iter]["key"] == delrow){box_attr_attend.splice(iter,1);}}
+		if(box_us_dist.hasOwnProperty(iter)){if(box_us_dist[iter]["key"] == delrow){box_us_dist.splice(iter,1);}}
+		if(box_us_sdist.hasOwnProperty(iter)){if(box_us_sdist[iter]["key"] == delrow){box_us_sdist.splice(iter,1);}}
+		if(box_us_road.hasOwnProperty(iter)){if(box_us_road[iter]["key"] == delrow){box_us_road.splice(iter,1);}}
+		if(box_us_direc.hasOwnProperty(iter)){if(box_us_direc[iter]["key"] == delrow){box_us_direc.splice(iter,1);}}
+		if(box_us_rot.hasOwnProperty(iter)){if(box_us_rot[iter]["key"] == delrow){box_us_rot.splice(iter,1);}}
+		if(box_us_speed.hasOwnProperty(iter)){if(box_us_speed[iter]["key"] == delrow){box_us_speed.splice(iter,1);}}
+
+    	}
+	var row_tobedel = document.getElementById("trow".concat(delrow.toString()));
+    	row_tobedel.parentNode.removeChild(row_tobedel);
+	var video = document.getElementById("myVideo");
+    	plotcanvas();
+}	
+function refresh(){
+	$('#refresh').load(document.URL +  ' #refresh');
+	return false;
+}
+
+function getEventTarget(e) {
+    e = e || window.event;
+    return e.target || e.srcElement; 
+}
+window.onload = function () {
+    $('#resetbut').click();
+    $('#play-video').click();
+}
+
+
+
+</script>
+	
+    </head>
+
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+</html>

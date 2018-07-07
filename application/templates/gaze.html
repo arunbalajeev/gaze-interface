@@ -1,0 +1,562 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <nav class="navbar navbar-default" role="navigation">
+    <script>
+	var isFirefox = typeof InstallTrigger !== 'undefined';
+
+	function savevideo(submit){
+	if (typeof(submit)==='undefined') {
+        	submit=false;
+    	}
+	var fmkey_count=0;
+        var key="{{session['keys']}}"
+	for (var pair of video_blob.keys()) {
+    		fmkey_count=fmkey_count+1;
+	}
+	console.log(fmkey_count)
+	if (click_record!=1)// || approval0!=1 || approval1!=1 || approval2!=1 || approval3!=1 || approval4!=1 )
+	{
+	document.getElementById('quali_text').innerHTML ='Please click Save Video button';
+	$('#quali_info').modal('show');
+	console.log('hehe')
+    }
+    else{
+		console.log(key);
+		submit=-1;
+		var ablob = new window.FileReader();
+		var fmkey_count=0
+		for (var pair of video_blob.keys()) {
+	    		fmkey_count=fmkey_count+1;
+		}
+		console.log(fmkey_count)
+		selfie.push(selfie_lefttop);selfie.push(selfie_righttop);selfie.push(selfie_leftbottom);selfie.push(selfie_rightbottom);
+		selfie_dummy.push("dummy")
+		function readFile(index) {
+		    if( index >= fmkey_count ) return;
+
+		    ablob.onload = function(e) { 
+		        var base64dat = ablob.result; 
+			str_arr_dummy.push("dummy")
+			if(index==fmkey_count-1){
+				out_data = {blob:str_arr_dummy,selfie:selfie_dummy,status:"Fail",submitted: submit,};
+				console.log("qwerty0");console.log(str_arr);console.log(out_data);
+				execute_ajax(out_data)
+			}
+		        readFile(index+1)
+		    }
+		    console.log(video_blob.getAll('videofile_'+index.toString()))
+		    ablob.readAsDataURL(video_blob.getAll('videofile_'+index.toString())[0]);
+		}
+		//setTimeout(function(){
+		readFile(0);
+		//}, 1000)
+		function execute_ajax(out_data){
+    			//out_data = {blob:str_arr_dummy,submitted: submit,};
+		console.log("qwerty");console.log(out_data);console.log(str_arr);
+		//}, 2000)
+		//setTimeout(function(){
+		$.ajax({
+	      	type: "POST",
+	      	//dataType: 'json',
+	      	url: endpoint + 'savevideo/',
+	      	data: JSON.stringify(out_data),
+	      	contentType:"application/json; charset=utf-8",
+		//processData: false,
+	      	success: function(data) {
+			data= JSON.parse(data)
+			if(data['status']=='OK'){
+				document.getElementById('quali_text').innerHTML ='Congratulations! The task is Completed. The Key is <b>' + key+'</b> <br/> Please use this key in the HIT assignment';
+				$('#quali_info').modal('show');
+		    		setTimeout(function(){
+				}, 2000);
+				}
+			else{
+				document.getElementById('quali_text').innerHTML ='Please wait, data is saving....Click Submit HIT again';
+				$('#quali_info').modal('show');}
+	      	}},'json').fail(function(jqXHR, textStatus, errorThrown) {
+		console.log("error submitting ");
+		console.log(errorThrown);
+		console.log(textStatus);
+		console.log(jqXHR);
+		});
+		}
+
+		}
+	}
+    </script>
+    <div class="navbar-collapse collapse">	
+	{% set imgid = session['image_id'].split('/') %}
+	{% set imageid = imgid[::-1][0].split('.')[0] %}
+	{% set imgName = '_'.join(imageid.split('_')[0:2]) %}
+	<ul class="nav navbar-nav navbar-left">
+            <!--<img alt="LOGO" src="...">-->
+	{% if session['assignment_id']!="ASSIGNMENT_ID_NOT_AVAILABL":%}
+            <input type="button" id="submit_hit" class="btn btn-success btn-default navbar-btn btn-head" value="Submit HIT"
+                   onclick="savevideo(true)" style="visibility:hidden"/><!--"$('#submit_hit_model').modal('show');"/> -->
+	<input id="save_video" type="button" class="btn btn-success btn-default navbar-btn btn-head" value="Save Video"
+                   onclick="savevideo1(true)" />
+	{% else %}
+		<br/>Please <b>Accept HIT</b> before annotating!
+	{% endif%}
+		<br/>Please wait for 5 seconds after clicking the Save Video button for the data to get saved. Then Click Submit HIT.
+            </ul>
+	<ul class="nav navbar-nav navbar-right" style="margin-right:20px"> Video ID: {%print session['xbox']%}
+	<input id="stop_vid_record" type="button" class="btn-head btn btn-primary btn-default navbar-btn" value="Stop Video"
+                   onclick="stop_save_video();" style="visibility:hidden"/>
+	<input id="start_vid_record" type="button" class="btn-head btn btn-primary btn-default navbar-btn" value="Record Video"
+                   onclick="record_save_video();" style="visibility:hidden"/>
+	<!--<input type="button" class="btn-head btn btn-primary btn-default navbar-btn" value="Print Screen"
+                   onclick="takeScreenShot();" /> -->
+        <input type="button" class="btn-head btn btn-primary btn-default navbar-btn" value="View Selfie"
+                   onclick="showview_video();" />
+                   <!--onclick="$('#toggle_vid').toggle();setTimeout(function(){$('#toggle_vid').toggle();}, 2000);" /> -->
+	<input type="button" class="btn-head btn btn-default navbar-btn" style="background-color:#00FFFF;" value="Show Instructions"
+                   onclick="$('#watch_video').modal('show');" /></ul>
+        <center><h3><b>Gaze Recording Task</b></h3></center>
+    </div>
+    </nav>
+    <script></script>
+
+
+    <div class="container-fluid">
+    <div class="col-md-12"><center><div class="col-md-12">
+    <p><b><span style="color:red">Maximize/Minimize</span> the browser such that the whole image is seen in the window. <span style="color:red">Click</span> the corners of the image. Then, <span style="color:red">Click</span> on the objects one by one and gaze them till the end of video.</b></p>	<div onclick="checkplayvideo();"><canvas id="myCanvas" width="1920px" height="960px" id="jcrop_target" style="background: url('{{session['image_id']}}');background-size: 1920px 960px;" >
+Your browser does not support the HTML5 canvas tag.</canvas></div>
+	<span>Click Play Video to replay the video when unsure&nbsp;&nbsp;&nbsp;</span>
+	{% if session['assignment_id']!="ASSIGNMENT_ID_NOT_AVAILABL":%}
+		<button type="button" class="btn btn-info" id="play-video">Play Video</button>
+	{% else %}
+		<button type="button" class="btn btn-default" onclick="alert('Accept HIT')">Play Video</button>
+
+	{% endif%}
+	<input type="button" class="btn-head btn btn-primary btn-default navbar-btn" value="Next" id="next_box"
+                   onclick="iterate_box();" /></div>
+    </center><br/>
+
+	<div class="col-md-2"></div><div class="col-md-9">&nbsp;&nbsp;&nbsp;<button type="button" style="visibility:hidden" class="btn btn-info" id="prev-anno">View Prev annotation</button>&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-warning" style="visibility:hidden" id="rem-anno">Hide Prev annotation</button>&nbsp;&nbsp;&nbsp;
+	{% if session['assignment_id']!="ASSIGNMENT_ID_NOT_AVAILABL":%}
+		<button style="float:right;" type="button" class="btn btn-info hidden" id="play-video" style="visibility:hidden">Play Video</button>
+	{% else %}
+		<button style="float:right;" type="button" class="btn btn-default" onclick="alert('Accept HIT')" style="visibility:hidden">Play Video</button>
+
+	{% endif%}
+	<span style="float:right;visibility:hidden">Click Play Video to replay the video when unsure&nbsp;&nbsp;&nbsp;</span><br />
+	<center>
+    	<table class="table table-striped header-fixed" id='boxlist' style="visibility:hidden">
+        	<tbody id="track">
+		<tr id='trow0' style="display:block">
+        			<td style="width:10%">-</td>
+        			<td>-</td>
+        			<td style="width:50%">-</td>
+				<td style="width:10%">-</td>
+				<td style="width:10%">-</td>
+    		</tr>
+		</tbody>
+    	</table></center></div>
+    </div>
+	
+    <div class="col-md-6">
+	<div>
+	<h3 style="visibility:hidden">Attributes</h3>
+	<form><fieldset id="fdisabled"><div >
+    	<table class="table table-striped header-fixed" id='attrlist' style="visibility:hidden">
+        	<tbody id="attribute" style="overflow:visible">
+						
+		</tbody>
+    	</table>
+	</div>
+	<h3 style="visibility:hidden">Relationship with our Car &nbsp;&nbsp;&nbsp;<a href="#" id="helpicon" class="masterTooltip" title="Video is captured from the camera mounted on the car.">?</a> </h3>
+    	<table class="table table-striped header-fixed" id='rellist' style="visibility:hidden">
+        	<tbody id="relationship">
+		
+		</tbody>
+    	</table><input type="reset" id="resetbut" style="visibility:hidden" value="Reset">
+	
+	<div id="refresh" style="margin-top:-500px">
+	</fieldset></form>
+	
+	</div>
+ 	</div>	  
+	
+	</center>
+     </div>
+	
+     </div>
+   </div>  </div> 
+<hr>
+<div>
+<div id="toggle_vid" hidden><video style="width:400px;height:400px;" muted autoplay id="cam_video" class="video-js vjs-default-skin"></div>
+<canvas id="videoCanvas" style="visibility:hidden"></canvas> 
+  <div class="select" style="visibility:hidden">
+    <label for="audioSource">Audio source: </label><select id="audioSource"></select>
+  </div>
+
+  <div class="select" style="visibility:hidden">
+    <label for="videoSource">Video source: </label><select id="videoSource"></select>
+  </div> 
+
+
+</div>
+
+    <div id="modal-loading" class="modal fade">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal-progress" class="modal fade">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div style="width: 0%;" class="progress-bar"></div>
+            </div>
+            <div class="text-center">0%</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal-error" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">&times;</button>
+            <h4 class="modal-title">Error</h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-warning"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://people.ee.ethz.ch/~arunv/speech_recorder/static/WebAudioRecorder.min.js" type="text/javascript"></script>
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.7/wavesurfer.min.js"></script>
+	<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/record_video.js" type="text/javascript"></script>
+<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/html2canvas.min.js"></script>
+<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/html2canvas.js"></script>
+<script src="https://people.ee.ethz.ch/~arunv/gaze_recorder/static/capture-video-frame.js"></script>
+  <script>
+var videocanvas = document.getElementById('videoCanvas');
+var videoctx = videocanvas.getContext('2d');
+var cam_video = document.getElementById('cam_video');
+
+// set canvas size = video size when known
+cam_video.addEventListener('loadedmetadata', function() {
+  videocanvas.width = cam_video.videoWidth;
+  videocanvas.height = cam_video.videoHeight;
+});
+
+
+//function record_save_video(){
+cam_video.addEventListener('loadeddata', function() {
+  var $this = this; //cache
+  (function loop() {
+    if (!$this.paused && !$this.ended) {
+      videoctx.drawImage($this, 0, 0);
+      setTimeout(loop, 1000 / 30); // drawing at 30fps
+    }
+  })();
+}, 0);
+//};
+
+var recorder=new CanvasRecorder(videocanvas,{disableLogs:true});
+
+function record_save_video(){ 
+    recorder.record();
+}
+
+function stop_save_video(){ 
+    recorder.stop(function(blob) {
+    	var video = document.createElement('video');
+	video.src = URL.createObjectURL(blob);
+	video.setAttribute('style', 'height: 100%;');
+	//document.body.appendChild(video);
+	video.controls = true;
+	video.play();
+	video_blob.set('videofile_'+iter_no.toString(),blob);
+    	console.log(video_blob.getAll('videofile_'+iter_no.toString()));
+    	console.log(blob);
+    	console.log("saving to video blob file_"+iter_no.toString())
+	if(gazed_videos.indexOf(iter_no)==-1){
+	gazed_videos.push(iter_no)}
+	setTimeout(function () {
+		$('#next_box').click();
+	    }, 1000);
+	//$('#next_box').click();
+	//iterate_box();
+    });
+}
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        var words = text.split(' ');
+        var line = '';
+
+        for(var n = 0; n < words.length; n++) {
+          var testLine = line + words[n] + ' ';
+          var metrics = context.measureText(testLine);
+          var testWidth = metrics.width;
+          if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+          }
+          else {
+            line = testLine;
+          }
+        }
+        context.fillText(line, x, y);
+}
+function showview_video(){
+    var frame = captureVideoFrame('cam_video', 'png');
+
+    var img = document.getElementById('selfie');
+    img.setAttribute('src', frame.dataUri);
+    $('#see_selfie').modal('show');
+
+}
+  </script>
+
+	<img src="{{session['image_id']}}" id="prev_crop" width="1920px" style="visibility:hidden" height="960px"/>
+<canvas id="prevCanvas" width="1920px" height="960px" id="jcrop_target" style="background: url('{{session['image_id']}}');background-size: 1920px 960px;visibility:hidden" >
+Your browser does not support the HTML5 canvas tag.</canvas>
+{% block loop_item2 %}
+	{% if session['xbox']|length == 0 %}
+		<script>
+			document.getElementById('quali_text').innerHTML ='There are box annotations available for image_id.<br/> Please update boxes.csv with the box annotations for this particular image_id.';
+			$('#quali_info').modal('show');
+		</script>
+	{% else %}
+    
+		{% for xnum in session['xbox']: %}
+				<script type="text/javascript">
+					  xbox.push({{session['xbox'][loop.index0]}}*2);ybox.push({{session['ybox'][loop.index0]}}*2)
+					  wbox.push({{session['wbox'][loop.index0]}}*2);hbox.push({{session['hbox'][loop.index0]}}*2)
+					  colbox.push("{{session['colbox'][loop.index0]}}");
+					  console.log("hello I am "+xbox.length.toString())
+				</script>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+<script>
+function dialog_info(){
+var fmkey_count1=0
+for (var pair of video_blob.keys()) {
+	fmkey_count1=fmkey_count1+1;
+}
+if(fmkey_count1!=xbox.length){
+	document.getElementById('quali_text').innerHTML =fmkey_count1.toString()+' boxes out of '+xbox.length.toString()+' boxes have been clicked and gazed.<br/> Please ensure all objects are gazed. Please use <b>Next</b> button to iterate over the objects.';}
+else{document.getElementById('quali_text').innerHTML =' Good work! Please click <b>Save Video</b> button';iter_no=-1;}
+$('#quali_info').modal('show');
+}
+function iterate_box(){
+     if(calibration>=4){
+	
+	  if(iter_no==xbox.length-1){
+		iter_no=0;
+		while(gazed_videos.indexOf(iter_no)!=-1&&iter_no<xbox.length-1){iter_no=iter_no+1;}
+		dialog_info();
+	  }
+	  else{iter_no=iter_no+1;
+	  while(gazed_videos.indexOf(iter_no)!=-1&&iter_no<xbox.length-1){iter_no=iter_no+1;}
+	  if(gazed_videos.length==xbox.length){dialog_info(); return}
+	  }
+	  var canvas = document.getElementById('myCanvas');
+	  var context = canvas.getContext('2d');
+	  var img=document.getElementById("prev_crop");  
+	  context.drawImage(img,0,0,1920,960);
+	  context.beginPath();
+	  context.rect(xbox[iter_no], ybox[iter_no], wbox[iter_no], hbox[iter_no]);	
+	  context.font="15px Arial"
+	  context.fillStyle = 'white';
+	  context.textAlign='center';
+	  //wrapText(context, textbox[iter_no],xbox[iter_no]+wbox[iter_no]/2.0,ybox[iter_no]+hbox[iter_no]/3.0, wbox[iter_no], hbox[iter_no]/5);
+	  context.fillStyle = 'transparent';
+	  context.fill();
+	  context.lineWidth = 5;
+	  context.strokeStyle = colbox[iter_no];
+	  context.stroke();
+	  console.log("hello its "+iter_no.toString())
+	  setTimeout(function () {
+	    }, 2000);
+      }
+      else{
+	document.getElementById('quali_text').innerHTML ='Please click all the corners of the image.(on the white boxes at the corners)';
+	$('#quali_info').modal('show');
+      }
+}
+</script>
+<video id="myVideo" width="10px" height="5px" style="visibility:hidden" controls autoplay>
+  <source src="https://data.vision.ee.ethz.ch/arunv/obj_desc_annotator/cityscape/{{session['video_folder']}}/{{session['video_tag']}}.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+			</video>
+<div id="view_video" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h3 class="modal-title">Watch the cam video</h3></center>
+            </div>
+                <div class="modal-body" style="width:500px;height:500px">
+                     <center><video style="width:400px;height:400px" class="videoAdd" muted autoplay></video></center>
+                </div>
+                <div class="modal-footer">
+                </div>
+        </div>
+
+      </div>
+</div>
+
+<div id="watch_video" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h3 class="modal-title">Read the Instructions</h3></center>
+            </div>
+                <div class="modal-body">
+                   <center>
+			<div class="Instructions" style="width:700px"><h3 align = "center">Instructions </h3>
+				
+				<ul>
+				<li> The <b>Terms and Conditions </b> </li>
+					<ul>
+					<li> <u>Use the laptop with functional camera, otherwise the annotation is disqualified.</u></li>
+					<li> <u>The video is recorded from frontal camera of the laptop/computer during the annotation.</u></li>
+					<li> <u>The recorded video is used for research purpose only.</u></li> 
+					</ul>
+				<li> The <b>Tasks</b> </li>
+					<ul>
+					<li> Click the four corners of the shown image where it is highlighted by white colored box.</li>
+					<li> Colored boxes which bound the objects in the image are to be gazed one after the other. Click inside the colored box and see the clicked object in the shown video till the end. </li> 
+					<li> Click the colored box one by one and gaze at the object. If the colored box is not visible, click Next button.</li> 
+					<li> After clicking and gazing at all the objects, click Save Video button and then Submit HIT button.</li> 
+					</ul>
+				<li> The <b>DO's</b></li>
+					<ul>
+					<li> Please sit under good lighting conditions.</li>
+					<li> Check the image quality from the camera by clicking View Selfie button</li>
+					<li> Gaze at the clicked object and follow the object till the end of the video.</li>
+					</ul>
+				
+				<li>After completion the HIT will be completed.</li>
+				<li>If you have problems or suggestions regarding the interface: Please get in touch</li>
+				</ul>
+    </div>
+	
+                </div>
+                <div class="modal-footer">
+                </div>
+        </div>
+
+      </div>
+</div>
+<div id="view_categories" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h3 class="modal-title">Click and Gaze</h3></center>
+            </div>
+                <div class="modal-body">
+                   <center>
+			<div class="Categories" style="width:150px">
+				All the corners are clicked and gazed.<br/> <u>Move on to click the objects and gaze them. Use <b>Next</b> button to iterate on the objects.</u>
+    			</div>
+		</center>
+                </div>
+                <div class="modal-footer"><center></center>
+                </div>
+        </div>
+
+      </div>
+</div>
+<div id="see_selfie" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-el">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h3 class="modal-title">Selfie</h3></center>
+            </div>
+                <div class="modal-body">
+                   <center>
+			<img id="selfie" src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/instructionImg.PNG"/>
+		</center>
+                </div>
+		<div class="modal-footer">
+                Kindly ensure that the selfie looks good.
+            </div>
+        </div>
+
+      </div>
+</div>
+<div id="see_example" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-el">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h3 class="modal-title">Example</h3></center>
+            </div>
+                <div class="modal-body">
+                   <center>
+			<img src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/instructionImg.PNG"/>
+<img src="https://people.ee.ethz.ch/~arunv/local_obj_desc_annotator/static/instructionImg1.PNG"/>
+		</center>
+                </div>
+		<div class="modal-footer">
+                Kindly ensure that Colored Boxes fit the objects in the same way
+            </div>
+        </div>
+
+      </div>
+</div>
+<a href="https://people.ee.ethz.ch/~arunv/gaze-interface/" id="redirect" style="visibility:hidden">Redirecting...</a>
+  <div id="quali_info" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Feedback</h3>
+            </div>
+            <div class="modal-body">
+                <p id='quali_text'></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id='finish_quali' data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div style='visibility: hidden'>
+<form action="https://www.mturk.com/mturk/externalSubmit" style='visibility: hidden;' method="POST" id="amt_submit" style='position:absolute; top:710px; left:400px'>
+    Assignment ID: <input id="assignmentId" value="{{session['assignment_id']}}" name="assignmentId"/>
+    <br/>
+    Worker ID: <input id="workerId" value="{{session['worker_id']}}" name="workerId"/>
+    <br/>
+    HIT ID: <input id="hitId" value="{{session['hit_id']}}" name="hitId"/>
+</form>
+</div>
+
+{% endblock %}
