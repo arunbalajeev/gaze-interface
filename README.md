@@ -2,8 +2,8 @@
 
 This project allows to create Web Interface for recording the gaze on videos. We used this interface for recording gaze by crowdsourcing the task in Amazon Mechanical Turk for our following work:
 
-"Object Refrring in Videos using Language and Human Gaze" - CVPR 2018
-Arun Balajee Vasudevan, Dengxin Dai, Luc Van Gool 
+"Object Referring in Videos using Language and Human Gaze" - CVPR 2018<br/>
+Arun Balajee Vasudevan, Dengxin Dai, Luc Van Gool <br/>
 CVLab, ETH Zurich
 
 ### Installation
