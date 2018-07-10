@@ -1,3 +1,4 @@
+Frame path, X, Y, Width, Height, Color ID, Description
 https://data.vision.ee.ethz.ch/arunv/obj_desc_annotator/cityscape/zurich/zurich_000005_000029_leftImg8bit.png,460,186,124,119,#40B2AB,a gray car in front of us drives alongside with a yellow van
 https://data.vision.ee.ethz.ch/arunv/obj_desc_annotator/cityscape/zurich/zurich_000005_000029_leftImg8bit.png,675,128,188,190,#6867A7,"The small, yellow van on the right"
 https://data.vision.ee.ethz.ch/arunv/obj_desc_annotator/cityscape/zurich/zurich_000005_000029_leftImg8bit.png,297,190,44,39,#FD64BF,A white color car parked on left side of road
